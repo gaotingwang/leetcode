@@ -30,9 +30,6 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.PriorityQueue;
 import java.util.Queue;
-import java.util.Set;
-
-import com.sun.org.apache.regexp.internal.RE;
 
 /**
  * 最小的k个数
@@ -78,8 +75,6 @@ public class ZuiXiaoDeKgeShuLcof {
             }
             return result;
         }
-
-
 
         /**
          * 法一：借助快排思想，k位之前的数都arr[k]小，k位之后的数都arr[k]大
