@@ -260,7 +260,117 @@ for 状态1 in 状态1的所有取值：
 
 ## 基础类题目
 
-TODO 补全
+1. 检测数组中重复元素
+
+   ```java
+   public boolean checkDuplicateUsingAdd(String[] input) {
+     Set tempSet = new HashSet();
+     for (String str : input) {
+       if (!tempSet.add(str)) {
+           // 需要重复元素，可返回str
+         return true;
+       }
+     }
+     return false;
+   }
+   ```
+
+2. 反转字符串
+
+   ```java
+   // 1.利用StringBuilder
+   String reverseStr = new StringBuffer(str).reverse().toString();
+   
+   // 2.递归
+   public static String reverseRecursively(String str) {
+   
+     //base case to handle one char string and empty string
+     if (str.length() < 2) {
+       return str;
+     }
+   
+     return reverseRecursively(str.substring(1)) + str.charAt(0);
+   
+   }
+   
+   // 3.数字反转
+   private static int reverse(int number){
+     int reverse = 0;
+   
+     while(number != 0){
+       reverse = reverse*10 + number%10; 
+       number = number/10;
+     }
+   
+     return reverse;
+   }
+   ```
+
+3. 怎么检查一个字符串只包含数字？ — 利用正则表达式
+
+4. 怎么打印出一个字符串的所有排列？ — 回溯
+
+   ```java
+   /**
+    * 穷举所有可能情况，典型回溯算法
+    */
+   public String[] permutation(String s) {
+       StringBuilder tmp = new StringBuilder();
+       Set<Integer> index = new HashSet<>();
+       permutation(s, tmp, index);
+       return result.toArray(new String[result.size()]);
+   }
+   
+   private void permutation(String s, StringBuilder tmp, Set<Integer> index) {
+       // 1. 到达决策树底层，满足条件退出条件
+       if (tmp.length() == s.length()) {
+           result.add(String.valueOf(tmp));
+           return;
+       }
+       for (int i = 0; i < s.length(); i++) {
+           if (index.contains(i)) {
+               continue;
+           }
+           // 2. 做选择
+           index.add(i);
+           tmp.append(s.charAt(i));
+           // 3. 递归
+           permutation(s, tmp, index);
+           // 4. 撤销选择回退
+           tmp.deleteCharAt(tmp.length() - 1);
+           index.remove(i);
+       }
+   }
+   ```
+
+5. 怎样才能打印出数组中的重复元素？
+
+   ```java
+   public static void findDupicateInArray(int[] a) {
+       for (int j = 0; j < a.length; j++) {
+         	int count = 0;
+           for (int k = j + 1; k < a.length; k++) {
+               if (a[j] == a[k]) {
+                   count++;
+               }
+           }
+           if (count == 1) System.out.println("重复元素 : " + a[j]);
+           count = 0;
+       }
+   }
+   ```
+
+6. 在没有使用临时变量的情况如何交换两个整数变量的值？
+
+   ```java
+   int a=10; // a = 1010
+   int b=12; // b = 1100
+   // 异或运算能够使数据中的某些位翻转，其他位不变。这就意味着任意一个数与任意一个给定的值连续异或两次，值不变。即：a^b^b=a
+   a=a^b; // 得到翻转值
+   b=a^b; // 相当于a^b^b，得到之前a的值
+   a=a^b; // 此时b为之前a，相当于a^b^a，得到之前b的值
+   System.out.println(a + "--" + b);
+   ```
 
 
 
