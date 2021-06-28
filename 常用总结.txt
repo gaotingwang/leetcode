@@ -1,0 +1,84 @@
+import java.util.*;
+
+public class Main {
+
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        // 注意 hasNext 和 hasNextLine 的区别
+        while (in.hasNextInt()) { // 注意 while 处理多个 case
+            // String str=sc.nextLine();
+            int a = in.nextInt();
+        }
+    }
+
+}
+
+
+常用操作:
+StringBuilder tmp = new StringBuilder("123456");
+System.out.println(tmp.deleteCharAt(0).toString());
+System.out.println(tmp.delete(0,2).toString());
+
+int[] arr = new int[5];
+Arrays.fill(arr, 1);
+Arrays.copyOf(arr, k);
+System.out.println(Arrays.toString(Arrays.copyOfRange(arr, 1, 3)));
+
+Arrays.asList(new int []{1, 2, 3});
+list.toArray();
+
+str.toCharArray();
+
+
+常用算法思想：
+- 遍历方式无非迭代和递归
+- 双指针（左右、快慢） + (循环 or 递归)
+- 滑动窗口(不断增加right指针扩大窗口，直到符合要求,相当于在寻找一个「可行解」;不断增加left指针缩小窗口,直到字符不符合要求，在优化这个「可行解」)
+- 回溯算法（backtrac 函数，需要维护走过的「路径」和当前可以做的「选择列表」，当触发「结束条件」时，将「路径」记入结果集）
+- BFS（队列存储每一行的节点，作为下次要处理的节点）
+- 动态规划（明确状态（会发生变化的选择）、和选择（造成状态变化的行为））
+- 分治法
+
+
+常用内置数据结构：
+// 链表
+LinkedList<String> list = new LinkedList<>();
+list.add("");
+list.pollLast();
+
+// 队列
+Queue<String> queue = new LinkedList<>();
+queue.add("node");
+queue.peek();  // 获取元素不出栈
+queue.poll();  // 元素出栈
+
+Deque<String> deque = new LinkedList<>();
+deque.addFirst("node");
+deque.peekFirst();
+deque.pollLast();
+
+// 栈
+Stack<Integer> stack = new Stack<>();
+stack.push(1);
+while (stack.empty()) {
+    stack.peek(); // 获取元素不出栈
+    stack.pop(); // 元素出栈
+}
+
+// 堆
+Queue<Integer> heap = new PriorityQueue<Integer>(
+    new Comparator<Integer>() {
+        @Override
+        public int compare(Integer num1, Integer num2) {
+            return num2 - num1;
+        }
+    });
+
+// hash表
+Map<String, String> map = new HashMap<>();
+map.put("1", map.getOrDefault("1", 0) + 1);
+for (Map.Entry<String, String> entry : map.entrySet()) {
+    entry.getKey();
+    entry.getValue();
+}
+

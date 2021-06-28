@@ -47,6 +47,8 @@ void traverse(ListNode head) {
 
 先刷二叉树，因为二叉树是最容易培养框架思维的，而且大部分算法技巧，本质上都是树的遍历问题。
 
+二叉树都是基于递归框架的，核心的思路是**明确当前节点需要做的事情是什么，站在当前节点的视角，需要做哪些操作**，然后套二叉树前序，中序，后续递归框架就行了
+
 几乎所有二叉树的题目都是一套框架就可以出来：
 
 ```java
@@ -72,6 +74,8 @@ void traverse(TreeNode root) {
 
 
 ### 窗口滑动
+
+[最小覆盖子串](https://leetcode-cn.com/problems/minimum-window-substring/)
 
 窗口滑动就是通过左右指针维护一个窗口，不断滑动，然后更新答案，<font color="red">主要解决子串匹配类问题</font>。
 
@@ -111,6 +115,8 @@ while (right < s.size()) {
 
 ### 回溯算法（DFS）
 
+[字符串的全排列](https://leetcode-cn.com/problems/zi-fu-chuan-de-pai-lie-lcof/)
+
 回溯算法就是个多叉树的遍历问题，关键就是在前序遍历和后序遍历的位置做一些操作，算法框架如下：
 
 ```python
@@ -142,6 +148,8 @@ def backtrack(路径, 选择列表):
 
 
 ### BFS
+
+[二叉树的深度](https://leetcode-cn.com/problems/er-cha-shu-de-shen-du-lcof/)
 
 BFS 的核心思想不难理解，就是把一些问题抽象成图，从一个点开始，向四周开始扩散。一般来说，写 BFS 算法都是用`队列`这种数据结构，每次将一个节点周围的所有节点加入队列。
 
@@ -204,7 +212,7 @@ BFS 可以找到最短距离，但是空间复杂度高，而 DFS 的空间复�
 
 
 
-### 动态规划
+### 动态规划(一般求最值）
 
 递归树（或者说图），是从上向下延伸，都是从一个规模较大的原问题比如说 `f(20)`，向下逐渐分解规模，直到 `f(1)` 和 `f(2)` 这两个 base case，然后逐层返回答案，这就叫「自顶向下」。
 
@@ -248,6 +256,30 @@ for 状态1 in 状态1的所有取值：
 
 进一步优化，可以考虑降低空间复杂度，即所谓的「**状态压缩**」，如果发现每次状态转移只需要 DP table 中的一部分，那么可以尝试用状态压缩来缩小 DP table 的大小，只记录必要的数据。
 
+1. 背包问题
+	
+	[0-1背包](https://www.bilibili.com/video/BV15B4y1P7X7/)
+	
+	[正则表达式匹配](https://leetcode-cn.com/problems/zheng-ze-biao-da-shi-pi-pei-lcof/)
+	
+2. 子序列（不连续的序列）
+
+   - 一维的 dp 数组
+
+     $dp_{[i]} = 最值(dp_{[i]}, dp_{[j]} + ...)$
+
+     在子数组`array[0..i]`中，以`array[i]`结尾的目标子序列（[最长递增子序列](https://leetcode-cn.com/problems/longest-increasing-subsequence/)）的长度是`dp[i]`
+
+   - 二维的 dp 数组
+
+     - 涉及两个字符串/数组时（[最长公共子序列](https://leetcode-cn.com/problems/longest-common-subsequence/)），dp 数组的含义如下：
+
+       在子数组`arr1[0..i]`和子数组`arr2[0..j]`中，要求的公共子序列长度为`dp[i][j]`
+
+     - 只涉及一个字符串/数组时（[最长回文子序列](https://leetcode-cn.com/problems/longest-palindromic-subsequence/)），dp 数组的含义如下：
+
+       在子数组`array[i..j]`中，要求的最长子序列的长度为`dp[i][j]`。
+
 
 
 ### 贪心算法
@@ -255,6 +287,33 @@ for 状态1 in 状态1的所有取值：
 贪心算法可以认为是动态规划算法的一个特例，相比动态规划，使用贪心算法需要满足更多的条件（贪心选择性质），但是效率比动态规划要高。
 
 贪心选择性质简单说就是：每一步都做出一个局部最优的选择，最终的结果就是全局最优。
+
+
+
+### 分治法
+
+[为运算表达式设计优先级](https://leetcode-cn.com/problems/different-ways-to-add-parentheses/)
+
+[数组中的逆序对](https://leetcode-cn.com/problems/shu-zu-zhong-de-ni-xu-dui-lcof/)
+
+将原问题分解成小规模的子问题，然后根据子问题的结果构造出原问题的答案。**分治算法也需要满足一些条件，原问题结果可以通过合并子问题结果来计算**。
+
+```java
+void sort(int[] nums, int lo, int hi) {
+    int mid = (lo + hi) / 2;
+    /****** 分 ******/
+    // 对数组的两部分分别排序
+    sort(nums, lo, mid);
+    sort(nums, mid + 1, hi);
+  
+    /****** 治 ******/
+    // 合并两个排好序的子数组
+    merge(nums, lo, mid, hi);
+}
+
+```
+
+**先「分」后「治」，先按照运算符将原问题拆解成多个子问题，然后通过子问题的结果来合成原问题的结果**。
 
 
 
