@@ -47,22 +47,20 @@ public class HeWeiSdeLianXuZhengShuXuLieLcof {
     //leetcode submit region begin(Prohibit modification and deletion)
     class Solution {
         public int[][] findContinuousSequence(int target) {
-            int i = 1, j = 2;
-            int sum = i + j;
             List<int[]> res = new ArrayList<>();
-            while (i < j) {
+            for (int l = 1, r = 2; l < r;) {
+                int sum = (l + r) * (r - l + 1) / 2;
                 if (sum == target) {
-                    int[] tmp = new int[j - i + 1];
-                    for (int k = i; k <= j; k++) {
-                        tmp[k - i] = k;
+                    int[] tmp = new int[r - l + 1];
+                    for (int i = l; i <= r; ++i) {
+                        tmp[i - l] = i;
                     }
                     res.add(tmp);
-                }
-                if (sum >= target) {
-                    sum -= i;
-                    i++;
+                    l++;
+                } else if (sum < target) {
+                    r++;
                 } else {
-                    j++;
+                    l++;
                 }
             }
             return res.toArray(new int[0][]);
