@@ -319,7 +319,129 @@ void sort(int[] nums, int lo, int hi) {
 
 ## 基础类题目
 
-1. 检测数组中重复元素
+1. 排序算法
+
+   ```java
+   /**
+    * 先找到一个中间数将数组切割为两部分，左部分比该数小，右部分比该数大，然后对两个部分再进行递归。
+    * 查找出中轴（默认是最低位low）的在numbers数组排序后所在位置
+    * @param low 0
+    * @param high length -1
+    */
+   public void quickSort(int[] numbers,int low,int high) {
+       if (low < high) {
+           int i = low, j = high, x = numbers[low]; // 数组的第一个作为中轴
+           while (i < j) {
+               while(i < j && numbers[j] >= x){
+                   // 从右向左找第一个小于x的数
+                   j--;
+               }
+               //比中轴小的记录移到低端
+               if(i < j){
+                   numbers[i++] = numbers[j];
+               }
+               while(i < j && numbers[i] < x){
+                   // 从左向右找第一个大于等于x的数
+                   i++;
+               }
+               //比中轴大的记录移到高端
+               if(i < j){
+                   numbers[j--] = numbers[i];
+               }
+           }
+           
+           numbers[i] = x; //中轴记录到尾, 此时i为中轴的位置
+           quickSort(numbers, low, i - 1); // 递归调用
+           quickSort(numbers, i + 1, high);
+       }
+   }
+   ```
+
+2. 二叉树遍历
+
+   ```java
+   //      1
+   //     / \
+   //    2   3
+   //   /     \
+   //  4       5
+   //   \
+   //    6
+   //   / \
+   //  7   8
+   
+   //1 2 4 6 7 8 3 5
+   public static void prePrint(Node root) {
+       if(root == null) {
+           return;
+       }
+       Stack<Node> stack = new Stack<Node>();
+       Node node = root;
+       while (node != null || !stack.isEmpty()) {
+           if(node != null) {
+               System.out.print(node.val + " ");
+               // 节点入栈是为了找右孩子
+               stack.push(node);
+               node = node.left;
+           }else {
+               // 找到右孩子，该节点失去作用出栈
+               node = stack.pop().right;
+           }
+       }
+   }
+   
+   //4 7 6 8 2 1 3 5
+   public static void inPrint(Node root) {
+       if(root == null) {
+           return;
+       }
+       Stack<Node> stack = new Stack<Node>();
+       Node node = root;
+       while (node != null || !stack.isEmpty()) {
+           if(node != null) {
+               stack.push(node);
+               node = node.left;
+           }else {
+               node = stack.pop();
+               System.out.print(node.val + " ");
+               node = node.right;
+           }
+       }
+   }
+   
+   //7 8 6 4 2 5 3 1
+   public static void postPrint(Node root) {
+       if(root == null) {
+           return;
+       }
+       Stack<Node> stack = new Stack<Node>();
+       Node node = root;
+       // 作用是记录上一次访问打印的节点
+       Node pre = null;
+       while (node != null || !stack.isEmpty()) {
+           if(node != null) {
+               stack.push(node);
+               node = node.left;
+           }else {
+               // 已经访问到最左的节点了，这里是peek，因为需要首先去访问右节点
+               node = stack.peek();
+               // 如果当前节点的右孩子为空，或等于上一次访问打印的节点，则当前节点也可以出栈打印了
+               if (node.right == null || node.right == pre) {
+                   // 没有右孩子了，可以直接出栈打印了
+                   node = stack.pop();
+                   System.out.print(node.val + " ");
+                   pre = node;
+                   node = null;
+               }else {
+                   node = node.right;
+               }
+   
+           }
+       }
+   }
+   ```
+
+3. 检测数组中重复元素
 
    ```java
    public boolean checkDuplicateUsingAdd(String[] input) {
@@ -334,7 +456,7 @@ void sort(int[] nums, int lo, int hi) {
    }
    ```
 
-2. 反转字符串
+4. 反转字符串
 
    ```java
    // 1.利用StringBuilder
@@ -365,9 +487,9 @@ void sort(int[] nums, int lo, int hi) {
    }
    ```
 
-3. 怎么检查一个字符串只包含数字？ — 利用正则表达式
+5. 怎么检查一个字符串只包含数字？ — 利用正则表达式
 
-4. 怎么打印出一个字符串的所有排列？ — 回溯
+6. 怎么打印出一个字符串的所有排列？ — 回溯
 
    ```java
    /**
@@ -402,7 +524,7 @@ void sort(int[] nums, int lo, int hi) {
    }
    ```
 
-5. 怎样才能打印出数组中的重复元素？
+7. 怎样才能打印出数组中的重复元素？
 
    ```java
    public static void findDupicateInArray(int[] a) {
@@ -419,7 +541,7 @@ void sort(int[] nums, int lo, int hi) {
    }
    ```
 
-6. 在没有使用临时变量的情况如何交换两个整数变量的值？
+8. 在没有使用临时变量的情况如何交换两个整数变量的值？
 
    ```java
    int a=10; // a = 1010
@@ -664,15 +786,9 @@ void sort(int[] nums, int lo, int hi) {
 
 - 面试题43- 1～n整数中1出现的次数
 
-- 
-
 - 面试题45-把数组排成最小的数
 
-- 
-
 - 面试题49-丑数
-
-- 
 
 - 面试题57-2-和为S的连续正数序列(滑动窗口思想)
 
