@@ -80,6 +80,11 @@ void traverse(TreeNode root) {
 窗口滑动就是通过左右指针维护一个窗口，不断滑动，然后更新答案，<font color="red">主要解决子串匹配类问题</font>。
 
 ```java
+// 两个窗口
+// 1. 记录窗口中的符合条件的字符
+Map<Character, Integer> window = new HashMap<>();
+// 2. 目标需要的字符以及需要的对应的数量
+Map<Character, Integer> need = new HashMap<>();
 // 窗口指针
 int left = 0, right = 0;
 
