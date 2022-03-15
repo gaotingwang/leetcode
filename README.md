@@ -63,6 +63,160 @@ void traverse(TreeNode root) {
 
 
 
+## 基础类题目
+
+1. 排序算法
+
+   - **冒泡**
+
+   ```java
+   /**
+    * 冒泡排序：比较相邻的元素。如果第一个比第二个大，就交换他们两个。
+    * 对每一对相邻元素做相同工作，从开始第一对到结尾的最后一对。在这一点，最后的元素应该会是最大的数。
+    * 针对所有的元素重复以上的步骤，除了最后一个。
+    * 持续每次对越来越少的元素重复上面的步骤，直到没有任何一对数字需要比较。
+    */
+   public static void bubbleSort(int[] numbers) {
+       // 外层循环最后一次是两两比较，少循环一次，所以遍历次数是length - 1
+       int size = numbers.length - 1;
+       for(int i = 0 ; i < size; i ++) {
+           // 最大的已在之前冒出，所以内循环只要遍历length - 1 - i
+           for(int j = 0 ;j < size - i ; j++) {
+               if(numbers[j] > numbers[j+1]) {
+                   // 交换两数位置
+                   int temp = numbers[j];
+                   numbers[j] = numbers[j+1];
+                   numbers[j+1] = temp;
+               }
+           }
+       }
+   }
+   ```
+
+   - **快排**
+
+   ```java
+   /**
+    * 先找到一个中间数将数组切割为两部分，左部分比该数小，右部分比该数大，然后对两个部分再进行递归。
+    * 查找出中轴（默认是最低位low）的在numbers数组排序后所在位置
+    * @param low 0
+    * @param high length -1
+    */
+   public void quickSort(int[] numbers,int low,int high) {
+       if (low < high) {
+           int i = low, j = high, x = numbers[low]; // 数组的第一个作为中轴
+           while (i < j) {
+               while(i < j && numbers[j] >= x){
+                   // 从右向左找第一个小于x的数
+                   j--;
+               }
+               //比中轴小的记录移到低端
+               if(i < j){
+                   numbers[i++] = numbers[j];
+               }
+               while(i < j && numbers[i] < x){
+                   // 从左向右找第一个大于等于x的数
+                   i++;
+               }
+               //比中轴大的记录移到高端
+               if(i < j){
+                   numbers[j--] = numbers[i];
+               }
+           }
+           
+           numbers[i] = x; //中轴记录到尾, 此时i为中轴的位置
+           quickSort(numbers, low, i - 1); // 递归调用
+           quickSort(numbers, i + 1, high);
+       }
+   }
+   ```
+
+2. 二叉树遍历（非递归方式）
+
+   ```java
+   //      1
+   //     / \
+   //    2   3
+   //   /     \
+   //  4       5
+   //   \
+   //    6
+   //   / \
+   //  7   8
+   
+   //1 2 4 6 7 8 3 5
+   public static void prePrint(Node root) {
+       if(root == null) {
+           return;
+       }
+       Stack<Node> stack = new Stack<Node>();
+       Node node = root;
+       while (node != null || !stack.isEmpty()) {
+           if(node != null) {
+               System.out.print(node.val + " ");
+               // 节点入栈是为了找右孩子
+               stack.push(node);
+               node = node.left;
+           }else {
+               // 找到右孩子，该节点失去作用出栈
+               node = stack.pop().right;
+           }
+       }
+   }
+   
+   //4 7 6 8 2 1 3 5
+   public static void inPrint(Node root) {
+       if(root == null) {
+           return;
+       }
+       Stack<Node> stack = new Stack<Node>();
+       Node node = root;
+       while (node != null || !stack.isEmpty()) {
+           if(node != null) {
+               stack.push(node);
+               node = node.left;
+           }else {
+               node = stack.pop();
+               System.out.print(node.val + " ");
+               node = node.right;
+           }
+       }
+   }
+   
+   //7 8 6 4 2 5 3 1
+   public static void postPrint(Node root) {
+       if(root == null) {
+           return;
+       }
+       Stack<Node> stack = new Stack<Node>();
+       Node node = root;
+       // 作用是记录上一次访问打印的节点
+       Node pre = null;
+       while (node != null || !stack.isEmpty()) {
+           if(node != null) {
+               stack.push(node);
+               node = node.left;
+           }else {
+               // 已经访问到最左的节点了，这里是peek，因为需要首先去访问右节点
+               node = stack.peek();
+               // 如果当前节点的右孩子为空，或等于上一次访问打印的节点，则当前节点也可以出栈打印了
+               if (node.right == null || node.right == pre) {
+                   // 没有右孩子了，可以直接出栈打印了
+                   node = stack.pop();
+                   System.out.print(node.val + " ");
+                   pre = node;
+                   node = null;
+               }else {
+                   node = node.right;
+               }
+   
+           }
+       }
+   }
+   ```
+
+
+
 ## 解题套路框架
 
 > 递归条件：
@@ -262,11 +416,11 @@ for 状态1 in 状态1的所有取值：
 进一步优化，可以考虑降低空间复杂度，即所谓的「**状态压缩**」，如果发现每次状态转移只需要 DP table 中的一部分，那么可以尝试用状态压缩来缩小 DP table 的大小，只记录必要的数据。
 
 1. 背包问题
-	
-	[0-1背包](https://www.bilibili.com/video/BV15B4y1P7X7/)
-	
-	[正则表达式匹配](https://leetcode-cn.com/problems/zheng-ze-biao-da-shi-pi-pei-lcof/)
-	
+
+   [0-1背包](https://www.bilibili.com/video/BV15B4y1P7X7/)
+
+   [正则表达式匹配](https://leetcode-cn.com/problems/zheng-ze-biao-da-shi-pi-pei-lcof/)
+
 2. 子序列（不连续的序列）
 
    - 一维的 dp 数组
@@ -292,6 +446,12 @@ for 状态1 in 状态1的所有取值：
 贪心算法可以认为是动态规划算法的一个特例，相比动态规划，使用贪心算法需要满足更多的条件（贪心选择性质），但是效率比动态规划要高。
 
 贪心选择性质简单说就是：每一步都做出一个局部最优的选择，最终的结果就是全局最优。
+
+- 区间类问题：**区间问题肯定是按照区间的起点或者终点进行排序**（至于到底如何排序，这个就要因题而异），然后每次选择区间最早开始或最早结束的情况，最终产生最优结果
+  - [无重叠区间](https://leetcode-cn.com/problems/non-overlapping-intervals/)
+  - [视频拼接](https://leetcode-cn.com/problems/video-stitching)
+- 跳跃游戏：跳跃游戏就相当于一个将起点排序的区间问题
+  - [跳跃游戏 II](https://leetcode-cn.com/problems/jump-game-ii)
 
 
 
@@ -319,244 +479,6 @@ void sort(int[] nums, int lo, int hi) {
 ```
 
 **先「分」后「治」，先按照运算符将原问题拆解成多个子问题，然后通过子问题的结果来合成原问题的结果**。
-
-
-
-## 基础类题目
-
-1. 排序算法
-
-   ```java
-   /**
-    * 先找到一个中间数将数组切割为两部分，左部分比该数小，右部分比该数大，然后对两个部分再进行递归。
-    * 查找出中轴（默认是最低位low）的在numbers数组排序后所在位置
-    * @param low 0
-    * @param high length -1
-    */
-   public void quickSort(int[] numbers,int low,int high) {
-       if (low < high) {
-           int i = low, j = high, x = numbers[low]; // 数组的第一个作为中轴
-           while (i < j) {
-               while(i < j && numbers[j] >= x){
-                   // 从右向左找第一个小于x的数
-                   j--;
-               }
-               //比中轴小的记录移到低端
-               if(i < j){
-                   numbers[i++] = numbers[j];
-               }
-               while(i < j && numbers[i] < x){
-                   // 从左向右找第一个大于等于x的数
-                   i++;
-               }
-               //比中轴大的记录移到高端
-               if(i < j){
-                   numbers[j--] = numbers[i];
-               }
-           }
-           
-           numbers[i] = x; //中轴记录到尾, 此时i为中轴的位置
-           quickSort(numbers, low, i - 1); // 递归调用
-           quickSort(numbers, i + 1, high);
-       }
-   }
-   ```
-
-2. 二叉树遍历
-
-   ```java
-   //      1
-   //     / \
-   //    2   3
-   //   /     \
-   //  4       5
-   //   \
-   //    6
-   //   / \
-   //  7   8
-   
-   //1 2 4 6 7 8 3 5
-   public static void prePrint(Node root) {
-       if(root == null) {
-           return;
-       }
-       Stack<Node> stack = new Stack<Node>();
-       Node node = root;
-       while (node != null || !stack.isEmpty()) {
-           if(node != null) {
-               System.out.print(node.val + " ");
-               // 节点入栈是为了找右孩子
-               stack.push(node);
-               node = node.left;
-           }else {
-               // 找到右孩子，该节点失去作用出栈
-               node = stack.pop().right;
-           }
-       }
-   }
-   
-   //4 7 6 8 2 1 3 5
-   public static void inPrint(Node root) {
-       if(root == null) {
-           return;
-       }
-       Stack<Node> stack = new Stack<Node>();
-       Node node = root;
-       while (node != null || !stack.isEmpty()) {
-           if(node != null) {
-               stack.push(node);
-               node = node.left;
-           }else {
-               node = stack.pop();
-               System.out.print(node.val + " ");
-               node = node.right;
-           }
-       }
-   }
-   
-   //7 8 6 4 2 5 3 1
-   public static void postPrint(Node root) {
-       if(root == null) {
-           return;
-       }
-       Stack<Node> stack = new Stack<Node>();
-       Node node = root;
-       // 作用是记录上一次访问打印的节点
-       Node pre = null;
-       while (node != null || !stack.isEmpty()) {
-           if(node != null) {
-               stack.push(node);
-               node = node.left;
-           }else {
-               // 已经访问到最左的节点了，这里是peek，因为需要首先去访问右节点
-               node = stack.peek();
-               // 如果当前节点的右孩子为空，或等于上一次访问打印的节点，则当前节点也可以出栈打印了
-               if (node.right == null || node.right == pre) {
-                   // 没有右孩子了，可以直接出栈打印了
-                   node = stack.pop();
-                   System.out.print(node.val + " ");
-                   pre = node;
-                   node = null;
-               }else {
-                   node = node.right;
-               }
-   
-           }
-       }
-   }
-   ```
-
-3. 检测数组中重复元素
-
-   ```java
-   public boolean checkDuplicateUsingAdd(String[] input) {
-     Set tempSet = new HashSet();
-     for (String str : input) {
-       if (!tempSet.add(str)) {
-           // 需要重复元素，可返回str
-         return true;
-       }
-     }
-     return false;
-   }
-   ```
-
-4. 反转字符串
-
-   ```java
-   // 1.利用StringBuilder
-   String reverseStr = new StringBuffer(str).reverse().toString();
-   
-   // 2.递归
-   public static String reverseRecursively(String str) {
-   
-     //base case to handle one char string and empty string
-     if (str.length() < 2) {
-       return str;
-     }
-   
-     return reverseRecursively(str.substring(1)) + str.charAt(0);
-   
-   }
-   
-   // 3.数字反转
-   private static int reverse(int number){
-     int reverse = 0;
-   
-     while(number != 0){
-       reverse = reverse*10 + number%10; 
-       number = number/10;
-     }
-   
-     return reverse;
-   }
-   ```
-
-5. 怎么检查一个字符串只包含数字？ — 利用正则表达式
-
-6. 怎么打印出一个字符串的所有排列？ — 回溯
-
-   ```java
-   /**
-    * 穷举所有可能情况，典型回溯算法
-    */
-   public String[] permutation(String s) {
-       StringBuilder tmp = new StringBuilder();
-       Set<Integer> index = new HashSet<>();
-       permutation(s, tmp, index);
-       return result.toArray(new String[result.size()]);
-   }
-   
-   private void permutation(String s, StringBuilder tmp, Set<Integer> index) {
-       // 1. 到达决策树底层，满足条件退出条件
-       if (tmp.length() == s.length()) {
-           result.add(String.valueOf(tmp));
-           return;
-       }
-       for (int i = 0; i < s.length(); i++) {
-           if (index.contains(i)) {
-               continue;
-           }
-           // 2. 做选择
-           index.add(i);
-           tmp.append(s.charAt(i));
-           // 3. 递归
-           permutation(s, tmp, index);
-           // 4. 撤销选择回退
-           tmp.deleteCharAt(tmp.length() - 1);
-           index.remove(i);
-       }
-   }
-   ```
-
-7. 怎样才能打印出数组中的重复元素？
-
-   ```java
-   public static void findDupicateInArray(int[] a) {
-       for (int j = 0; j < a.length; j++) {
-         	int count = 0;
-           for (int k = j + 1; k < a.length; k++) {
-               if (a[j] == a[k]) {
-                   count++;
-               }
-           }
-           if (count == 1) System.out.println("重复元素 : " + a[j]);
-           count = 0;
-       }
-   }
-   ```
-
-8. 在没有使用临时变量的情况如何交换两个整数变量的值？
-
-   ```java
-   int a=10; // a = 1010
-   int b=12; // b = 1100
-   // 异或运算能够使数据中的某些位翻转，其他位不变。这就意味着任意一个数与任意一个给定的值连续异或两次，值不变。即：a^b^b=a
-   a=a^b; // 得到翻转值
-   b=a^b; // 相当于a^b^b，得到之前a的值
-   a=a^b; // 此时b为之前a，相当于a^b^a，得到之前b的值
-   System.out.println(a + "--" + b);
-   ```
 
 
 
@@ -807,5 +729,122 @@ void sort(int[] nums, int lo, int hi) {
 
 - 面试题66-构建乘积数组
 
-  
+
+
+
+## 其他算法题目
+
+1. 检测数组中重复元素
+
+   ```java
+   public boolean checkDuplicateUsingAdd(String[] input) {
+        Set tempSet = new HashSet();
+        for (String str : input) {
+          if (!tempSet.add(str)) {
+              // 需要重复元素，可返回str
+            return true;
+          }
+        }
+        return false;
+   }
+   ```
+
+2. 反转字符串
+
+   ```java
+   // 1.利用StringBuilder
+   String reverseStr = new StringBuffer(str).reverse().toString();
+   
+   // 2.递归
+   public static String reverseRecursively(String str) {
+   
+     //base case to handle one char string and empty string
+     if (str.length() < 2) {
+       return str;
+     }
+   
+     return reverseRecursively(str.substring(1)) + str.charAt(0);
+   
+   }
+   
+   // 3.数字反转
+   private static int reverse(int number){
+     int reverse = 0;
+   
+     while(number != 0){
+       reverse = reverse*10 + number%10; 
+       number = number/10;
+     }
+   
+     return reverse;
+   }
+   ```
+
+3. 怎么检查一个字符串只包含数字？ — 利用正则表达式
+
+4. 怎么打印出一个字符串的所有排列？ — 回溯
+
+   ```java
+   /**
+    * 穷举所有可能情况，典型回溯算法
+    */
+   public String[] permutation(String s) {
+       StringBuilder tmp = new StringBuilder();
+       Set<Integer> index = new HashSet<>();
+       permutation(s, tmp, index);
+       return result.toArray(new String[result.size()]);
+   }
+   
+   private void permutation(String s, StringBuilder tmp, Set<Integer> index) {
+       // 1. 到达决策树底层，满足条件退出条件
+       if (tmp.length() == s.length()) {
+           result.add(String.valueOf(tmp));
+           return;
+       }
+       for (int i = 0; i < s.length(); i++) {
+           if (index.contains(i)) {
+               continue;
+           }
+           // 2. 做选择
+           index.add(i);
+           tmp.append(s.charAt(i));
+           // 3. 递归
+           permutation(s, tmp, index);
+           // 4. 撤销选择回退
+           tmp.deleteCharAt(tmp.length() - 1);
+           index.remove(i);
+       }
+   }
+   ```
+
+5. 怎样才能打印出数组中的重复元素？
+
+   ```java
+   public static void findDupicateInArray(int[] a) {
+       for (int j = 0; j < a.length; j++) {
+         	int count = 0;
+           for (int k = j + 1; k < a.length; k++) {
+               if (a[j] == a[k]) {
+                   count++;
+               }
+           }
+           if (count == 1) System.out.println("重复元素 : " + a[j]);
+           count = 0;
+       }
+   }
+   ```
+
+6. 在没有使用临时变量的情况如何交换两个整数变量的值？
+
+   ```java
+   int a=10; // a = 1010
+   int b=12; // b = 1100
+   // 异或运算能够使数据中的某些位翻转，其他位不变。这就意味着任意一个数与任意一个给定的值连续异或两次，值不变。即：a^b^b=a
+   a=a^b; // 得到翻转值
+   b=a^b; // 相当于a^b^b，得到之前a的值
+   a=a^b; // 此时b为之前a，相当于a^b^a，得到之前b的值
+   System.out.println(a + "--" + b);
+   ```
+
+
 
