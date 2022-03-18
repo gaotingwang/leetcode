@@ -199,7 +199,7 @@ void traverse(TreeNode root) {
            }else {
                // 已经访问到最左的节点了，这里是peek，因为需要首先去访问右节点
                node = stack.peek();
-               // 如果当前节点的右孩子为空，或等于上一次访问打印的节点，则当前节点也可以出栈打印了
+               // 如果当前节点的右孩子为空，或等于上一次访问打印的节点(即右节点已经被打印过了)，则当前节点也可以出栈打印了
                if (node.right == null || node.right == pre) {
                    // 没有右孩子了，可以直接出栈打印了
                    node = stack.pop();
