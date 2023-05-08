@@ -51,7 +51,7 @@ public class ZuiXiaoDeKgeShuLcof {
             // 法一：借助快排思想，k位之前的数都arr[k]小，k位之后的数都arr[k]大
             // return withQuickSort(arr, k, 0, arr.length - 1);
 
-            // 法二：堆思想
+            // 法二：堆思想，堆介绍：https://www.cnblogs.com/sunshineliulu/p/12995910.html
             // Java 的 PriorityQueue 默认是小顶堆，添加 comparator 参数使其变成最大堆
             Queue<Integer> heap = new PriorityQueue<Integer>(
                 new Comparator<Integer>() {
